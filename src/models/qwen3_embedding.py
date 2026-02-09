@@ -33,7 +33,7 @@ class Qwen3Embedder:
             ]
 
     @torch.no_grad()
-    def embed(self, queries: list[str], normalize: bool = True) -> torch.Tensor:
+    def process(self, queries: list[str], normalize: bool = True) -> torch.Tensor:
         batch_dict = self.tokenizer(
             queries,
             padding=True,

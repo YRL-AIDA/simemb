@@ -1,12 +1,12 @@
 import json
-from typing import List, Union
+from typing import Dict, List, Union
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from contextlib import asynccontextmanager
 
 from src.core.settings import Settings
-from src.models.loader import load_text_model
+from src.models.loader import load_text_model, load_vl_model
 
 
 model = None
@@ -18,7 +18,10 @@ async def lifespan(app: FastAPI):
     global model
     print(f"Loading {settings.MODEL_NAME} model...")
 
-    model = load_text_model(settings.MODEL_NAME, settings.DEVICE)
+    if settings.VL:
+        model = load_vl_model(settings.VL_MODEL_NAME)
+    else:
+        model = load_text_model(settings.TEXT_ONLY_MODEL_NAME, settings.DEVICE)
 
     yield
 
@@ -33,14 +36,14 @@ app = FastAPI(
 
 
 class EmbedRequest(BaseModel):
-    inputs: Union[str, List[str]]
+    inputs: Union[str, List[str], List[Dict]]
 
 
 @app.post("/embed")
 async def embed(request: EmbedRequest):
     try:
         queries = request.inputs if isinstance(request.inputs, list) else [request.inputs]
-        embeddings = model.embed(queries)
+        embeddings = model.process(queries)
 
         return json.dumps({"embeddings": embeddings.tolist()})
     except Exception as e:
