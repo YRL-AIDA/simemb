@@ -2,7 +2,6 @@ import json
 
 
 if __name__ == "__main__":
-    # Sample questions/statements covering different domains
     texts = [
         "What is the capital of France?",
         "Explain quantum computing in simple terms.",
