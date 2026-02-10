@@ -1,3 +1,72 @@
-# Simple embedder
+# Qwen3 Embedding Service
+A lightweight, embedding microservice powered by Alibaba's Qwen3-Embedding models.
 
-todo
+## Quick start
+
+### 1. Setup docker container
+```bash
+# build image
+docker build -t qwen3-emb-service .
+
+# run service (cpu)
+docker run -p 8000:8000 -e HF_TOKEN={YOUR_HF_TOKEN} qwen3-emb-service
+
+# run service (gpu) (requires NVIDIA container toolkit: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
+docker run --gpus all -p 8000:8000 -e HF_TOKEN={YOUR_HF_TOKEN} qwen3-emb-service
+```
+
+### 2. Test API
+Option #1:
+```bash
+curl -X POST http://localhost:8000/embed \
+  -H "Content-Type: application/json" \
+  -d '{"inputs": ["What is RAG?"]}'
+```
+
+Option #2:
+```bash
+uv run examples generate_test_request.py; \
+uv run examples test_call.py
+```
+
+You'll get a JSON response `response.json` with L2-normalized embeddings.
+
+
+# API reference
+- **input**: list of strings (or dict)
+- **output**: list of L2-normalized embeddings
+- **model**: Qwen3-Embedding-`X`B / Qwen3-VL-Embedding-`X`B
+
+
+`POST /embed`:
+```json
+{
+  "inputs": [
+    "Text document #1",
+    "Text document #2",
+    ...
+  ]
+}
+
+// or
+
+{
+  "inputs": [
+    {"text": "Text document #1"},
+    {"image": "https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-VL/assets/demo.jpeg"},
+    {"image": "uploads/demo.jpeg"}
+  ]
+}
+```
+
+# Image format
+1. Images can be passed as URL. For example: https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-VL/assets/demo.jpeg
+2. Upload images into `uploads` directory and pass filename. For example for image `./uploads/demo.jpg`, in JSON you should pass `uploads/demo.jpg`.
+
+# Embedding dimensions
+Qwen3 Embedding models have user defined output size. You can change `hidden_size` in `config.json` for specific model.
+
+For example, `Qwen/Qwen3-VL-Embedding-2B` supports supports user-defined output dimensions ranging from 64 to 2048.
+
+# Switch between Text only model and VL model
+To load VL model, you need to set `VL = True` in `src/core/settings.py`. Use `False` to load text only model.
