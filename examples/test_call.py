@@ -3,7 +3,10 @@ import json
 import numpy as np
 
 if __name__ == "__main__":
-    with open("request.json") as f:
+    # request = "request.json"
+    request = "vl_req.json"
+
+    with open(request) as f:
         payload = json.load(f)
 
     response = requests.post(

@@ -12,4 +12,10 @@ wheels/
 # Python version
 .python-version
 
+# requests
 *.json
+
+# images
+*.jpeg
+*.png
+*.jpg

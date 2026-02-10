@@ -1,7 +1,8 @@
 import json
 
 
-if __name__ == "__main__":
+
+def generate_text_only_request(filename: str = "text_req.json") -> list[str]:
     texts = [
         "What is the capital of France?",
         "Explain quantum computing in simple terms.",
@@ -55,7 +56,9 @@ if __name__ == "__main__":
         "What is the meaning of life?"
     ]
 
-    filename = "request.json"
     with open(filename, "w", encoding="utf-8") as f:
         json.dump({"inputs": texts}, f, indent=2, ensure_ascii=False)
     print(f"Generated  '{filename}' with {len(texts)} text requests.")
+
+if __name__ == "__main__":
+    generate_text_only_request()
