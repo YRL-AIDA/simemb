@@ -1,10 +1,13 @@
 import requests
 import json
 import numpy as np
+from src.core.settings import Settings
 
 if __name__ == "__main__":
-    # request = "request.json"
-    request = "vl_req.json"
+    settings = Settings()
+    request = "text_req.json"
+    if settings.VL:
+        request = "vl_req.json"
 
     with open(request) as f:
         payload = json.load(f)
