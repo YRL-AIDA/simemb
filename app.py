@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Dict, List, Union
+from typing import Dict, List
 
 import aiofiles
 
@@ -39,14 +39,14 @@ app = FastAPI(
 
 
 class EmbedRequest(BaseModel):
-    inputs: Union[str, List[str], List[Dict]]
+    documents: List[Dict]
 
 
 @app.post("/embed")
 async def embed(request: EmbedRequest):
     try:
-        queries = request.inputs if isinstance(request.inputs, list) else [request.inputs]
-        embeddings = model.process(queries)
+        # TODO: pydantic validate check
+        embeddings = model.process(request.documents)
 
         return json.dumps({"embeddings": embeddings.tolist()})
     except Exception as e:
