@@ -1,5 +1,5 @@
-from src.models.qwen3_embedding import Qwen3Embedder
-from src.models.qwen3_vl_embedding import Qwen3VLEmbedder
+from src.ml.qwen3_embedding import Qwen3Embedder
+from src.ml.qwen3_vl_embedding import Qwen3VLEmbedder
 
 
 def load_text_model(model_name: str, device: str) -> Qwen3Embedder:

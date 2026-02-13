@@ -1,19 +1,18 @@
 import requests
 import json
 import numpy as np
-from src.core.settings import Settings
+from src.settings import settings
 
 if __name__ == "__main__":
-    settings = Settings()
     request = "text_req.json"
-    if settings.VL:
+    if settings.use_vl:
         request = "vl_req.json"
 
     with open(request) as f:
         payload = json.load(f)
 
     response = requests.post(
-        "http://localhost:8000/embed",
+        f"http://{settings.service_address}:{settings.service_port}/embedding/embed",
         json=payload
     )
 

@@ -2,8 +2,10 @@ import json
 import requests
 import os
 
+from src.settings import settings
 
-UPLOAD_IMAGES_URL = "http://localhost:8000/upload-image"
+
+UPLOAD_IMAGES_URL = f"http://{settings.service_address}:{settings.service_port}/{settings.upload_url}"
 
 texts = [
     "A woman playing with her dog on a beach at sunset."
